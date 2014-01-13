@@ -4,6 +4,7 @@
  */
 package net.rafaelaznar.dao;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -11,12 +12,13 @@ import net.rafaelaznar.data.MysqlData;
 import net.rafaelaznar.helper.Conexion;
 import net.rafaelaznar.helper.FilterBean;
 import net.rafaelaznar.bean.ProductoBean;
+
 /**
  *
  * @author al037805
  */
-public class ProductoDao_Mysql implements ProductoDao{
-    
+public class ProductoDao_Mysql implements ProductoDao {
+
     private final MysqlData oMysql;
     private final Conexion.Tipo_conexion enumTipoConexion;
 
@@ -24,7 +26,7 @@ public class ProductoDao_Mysql implements ProductoDao{
         oMysql = new MysqlData();
         enumTipoConexion = tipoConexion;
     }
-    
+
     @Override
     public int getPages(int intRegsPerPag, ArrayList<FilterBean> hmFilter, HashMap<String, String> hmOrder) throws Exception {
         int pages;
@@ -37,8 +39,8 @@ public class ProductoDao_Mysql implements ProductoDao{
             throw new Exception("ProductoDao.getPages: Error: " + e.getMessage());
         }
     }
-    
-     @Override
+
+    @Override
     public int getCount(ArrayList<FilterBean> hmFilter) throws Exception {
         int pages;
         try {
@@ -50,8 +52,8 @@ public class ProductoDao_Mysql implements ProductoDao{
             throw new Exception("ProductoDao.getCount: Error: " + e.getMessage());
         }
     }
-     
-     @Override
+
+    @Override
     public ArrayList<ProductoBean> getPage(int intRegsPerPag, int intPage, ArrayList<FilterBean> hmFilter, HashMap<String, String> hmOrder) throws Exception {
         ArrayList<Integer> arrId;
         ArrayList<ProductoBean> arrProducto = new ArrayList<>();
@@ -69,16 +71,20 @@ public class ProductoDao_Mysql implements ProductoDao{
             throw new Exception("ProductoDao.getPage: Error: " + e.getMessage());
         }
     }
-     
-     @Override
+
+    @Override
     public ProductoBean get(ProductoBean oProductoBean) throws Exception {
         if (oProductoBean.getId() > 0) {
             try {
                 oMysql.conexion(enumTipoConexion);
                 if (!oMysql.existsOne("producto", oProductoBean.getId())) {
                     oProductoBean.setId(0);
-                } else {
-                    oProductoBean.setNombre(oMysql.getOne("producto", "nombre", oProductoBean.getId()));
+                } else {          
+                    oProductoBean.setCodigo(oMysql.getOne("producto", "codigo", oProductoBean.getId()));
+                    oProductoBean.setDescripcion(oMysql.getOne("producto", "descripcion", oProductoBean.getId()));
+                    oProductoBean.setIdTipoproducto(Integer.parseInt(oMysql.getOne("producto", "tipoProducto", oProductoBean.getId())));
+                    BigDecimal bg1 = new BigDecimal(oMysql.getOne("producto", "precio", oProductoBean.getId()));
+                    oProductoBean.setPrecio(bg1);
                 }
             } catch (Exception e) {
                 throw new Exception("ProductoDao.getProducto: Error: " + e.getMessage());
@@ -90,7 +96,7 @@ public class ProductoDao_Mysql implements ProductoDao{
         }
         return oProductoBean;
     }
-     
+
     @Override
     public ProductoBean set(ProductoBean oProductoBean) throws Exception {
         try {
@@ -99,7 +105,7 @@ public class ProductoDao_Mysql implements ProductoDao{
             if (oProductoBean.getId() == 0) {
                 oProductoBean.setId(oMysql.insertOne("producto"));
             }
-            oMysql.updateOne(oProductoBean.getId(), "producto", "nombre", oProductoBean.getNombre());
+            //oMysql.updateOne(oProductoBean.getId(), "producto", "nombre", oProductoBean.getId());
             oMysql.commitTrans();
         } catch (Exception e) {
             oMysql.rollbackTrans();
@@ -109,7 +115,7 @@ public class ProductoDao_Mysql implements ProductoDao{
         }
         return oProductoBean;
     }
-    
+
     @Override
     public void remove(ProductoBean oProductoBean) throws Exception {
         try {
@@ -122,15 +128,15 @@ public class ProductoDao_Mysql implements ProductoDao{
             oMysql.desconexion();
         }
     }
-    
-     @Override
+
+    @Override
     public ArrayList<String> getColumnsNames() throws Exception {
-        ArrayList<String> alColumns=null;
+        ArrayList<String> alColumns = null;
         try {
             oMysql.conexion(enumTipoConexion);
-            alColumns=oMysql.getColumnsName("Producto", Conexion.getDatabaseName());
+            alColumns = oMysql.getColumnsName("Producto", Conexion.getDatabaseName());
             oMysql.desconexion();
-            
+
         } catch (Exception e) {
             throw new Exception("ProductoDao.removeProducto: Error: " + e.getMessage());
         } finally {
@@ -138,5 +144,4 @@ public class ProductoDao_Mysql implements ProductoDao{
         }
         return alColumns;
     }
-    
 }

@@ -4,42 +4,77 @@
  */
 package net.rafaelaznar.bean;
 
+
+import java.math.BigDecimal;
+
+
 /**
  *
- * @author al037805
+ * @author Crash
  */
-public class ProductoBean {
-    
-    private int id;
-    private String nombre;
 
-    /**
-     * @return the id
-     */
-    public int getId() {
-        return id;
+public class ProductoBean {
+    private static final long serialVersionUID = 1L;
+    
+    private Integer id;
+    
+    private String codigo;
+    
+    
+    private String descripcion;
+    
+    
+    private BigDecimal precio;
+    
+    private Integer idTipoproducto;
+
+    public ProductoBean() {
     }
 
-    /**
-     * @param id the id to set
-     */
-    public void setId(int id) {
+    public ProductoBean(Integer id) {
         this.id = id;
     }
 
-    /**
-     * @return the nombre
-     */
-    public String getNombre() {
-        return nombre;
+    public Integer getId() {
+        return id;
     }
 
-    /**
-     * @param nombre the nombre to set
-     */
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setId(Integer id) {
+        this.id = id;
     }
+
+    public String getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
+    }
+
+    public String getDescripcion() {
+        return descripcion;
+    }
+
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
+
+    public BigDecimal getPrecio() {
+        return precio;
+    }
+
+    public void setPrecio(BigDecimal precio) {
+        this.precio = precio;
+    }
+
+    public Integer getIdTipoproducto() {
+        return idTipoproducto;
+    }
+
+    public void setIdTipoproducto(Integer idTipoproducto) {
+        this.idTipoproducto = idTipoproducto;
+    }
+
     
     
 }
